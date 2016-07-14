@@ -38,7 +38,8 @@ RUN apt-get update && \
                                                libqhull-dev \
                                                libxft-dev \
                                                libjpeg-dev \
-                                               libyaml-dev
+                                               libyaml-dev \
+                                               ca-certificates
 
 # Enable neurodebian
 RUN curl -sSL http://neuro.debian.net/lists/vivid.de-md.full | tee /etc/apt/sources.list.d/neurodebian.sources.list && \
@@ -47,7 +48,7 @@ RUN curl -sSL http://neuro.debian.net/lists/vivid.de-md.full | tee /etc/apt/sour
     apt-get update
 
 # Install miniconda
-RUN curl -sSLOk https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
+RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
     /bin/bash Miniconda-latest-Linux-x86_64.sh -b -p /usr/local/miniconda && \
     rm Miniconda-latest-Linux-x86_64.sh && \
     echo '#!/bin/bash' > /etc/profile.d/conda_env.sh && \
@@ -80,7 +81,8 @@ RUN pip install --upgrade pip && \
                           nipy \
                           pydotplus \
                           rdflib \
-                          xvfbwrapper
+                          xvfbwrapper \
+                --ignore-installed
 
 # Install graphviz and pygraphviz
 RUN apt-get install -y graphviz libgraphviz-dev && \
