@@ -129,10 +129,4 @@ RUN apt-get clean remove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm -rf /boot /media /mnt /opt /srv
 
-# Switch back to main user
-USER main
-
-# Switch working directory to /home
-WORKDIR /home
-
 ENV SHELL /bin/bash
