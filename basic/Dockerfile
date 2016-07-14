@@ -47,7 +47,7 @@ RUN curl -sSL http://neuro.debian.net/lists/vivid.de-md.full | tee /etc/apt/sour
     apt-get update
 
 # Install miniconda
-RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
+RUN curl -sSLOk https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
     /bin/bash Miniconda-latest-Linux-x86_64.sh -b -p /usr/local/miniconda && \
     rm Miniconda-latest-Linux-x86_64.sh && \
     echo '#!/bin/bash' > /etc/profile.d/conda_env.sh && \
