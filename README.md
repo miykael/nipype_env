@@ -20,6 +20,6 @@ For a nipype environment with only a FreeSurfer dependency, use the docker image
 
 ## License
 
-This Dockerfile is based on the dockerfiles 'crn_base' and 'crn_nipype' from the Poldrack Lab ([github.com/poldracklab/crn_base](https://github.com/poldracklab/crn_base)), the dockerfiles from neurovault ([github.com/NeuroVault/NeuroVault](https://github.com/NeuroVault/NeuroVault)) and the dockerfile biss2016-notebook from Oscar Esteban from ([hub.docker.com/u/oesteban](https://hub.docker.com/u/oesteban)).
+This Dockerfile is based on the dockerfiles 'crn_base' and 'crn_nipype' from the Poldrack Lab ([github.com/poldracklab/crn_base](https://github.com/poldracklab/crn_base)), the dockerfiles from neurovault ([github.com/NeuroVault/NeuroVault](https://github.com/NeuroVault/NeuroVault)) and the dockerfile biss2016-notebook from Oscar Esteban from [hub.docker.com/u/oesteban](https://hub.docker.com/u/oesteban).
 
 This means that the same copyrights apply to this Dockerfile, as they do for the above mentioned dockerfiles. For more information see: [github.com/miykael/nipype_env](https://github.com/miykael/nipype_env).
