@@ -58,9 +58,9 @@ ENV PATH /usr/local/miniconda/bin:$PATH
 RUN export PATH
 
 # Update conda and install relevant dependencies
-RUN conda update conda --yes --quiet
-RUN conda update anaconda --yes --quiet
-RUN conda install --yes --quiet cython \
+RUN conda update conda --yes --quiet && \
+    conda install --yes --quiet anaconda && \
+    conda install --yes --quiet cython \
                         h5py \
                         ipython \
                         jupyter \
@@ -72,9 +72,9 @@ RUN conda install --yes --quiet cython \
                         scikit-image \
                         scikit-learn \
                         scipy \
-                        seaborn
-RUN python -c "from matplotlib import font_manager"
-RUN conda clean -ay
+                        seaborn && \
+    python -c "from matplotlib import font_manager" && \
+    conda clean -ay
 
 # Install dependencies in pip
 RUN pip install --upgrade --quiet pip && \
@@ -89,7 +89,7 @@ RUN pip install --upgrade --quiet pip && \
 
 # Install nipype
 RUN conda config --add channels conda-forge
-RUN conda install -y nipype
+RUN conda install --yes --quiet nipype
 
 # Clear apt cache and other empty folders
 RUN apt-get clean remove -y && \
