@@ -37,13 +37,12 @@ RUN wget ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/5.3.0/freesurfer-L
     /bin/bash -c 'echo "michaelnotter@hotmail.com\n14685\n *C4oZU2irTfPc" > /usr/local/freesurfer/.license'
 
 # Set-up FreeSurfer environment
-RUN echo '#!/bin/bash' > /etc/profile.d/freesurfer_env.sh && \
-    echo 'export FREESURFER_HOME=/usr/local/freesurfer' >> /etc/profile.d/freesurfer_env.sh && \
-    echo 'export SUBJECTS_DIR=/usr/local/freesurfer/subjects' >> /etc/profile.d/freesurfer_env.sh && \
-    echo 'export MNI_DIR=/usr/local/freesurfer/mni' >> /etc/profile.d/freesurfer_env.sh && \
-    echo 'export FSF_OUTPUT_FORMAT=nii.gz' >> /etc/profile.d/freesurfer_env.sh && \
-    echo 'export FSFAST_HOME=/usr/local/freesurfer/fsfast' >> /etc/profile.d/freesurfer_env.sh && \
-    echo 'source $FREESURFER_HOME/FreeSurferEnv.sh' >> /etc/profile.d/freesurfer_env.sh && \
-    echo 'source /etc/profile.d/freesurfer_env.sh' >> /etc/bash.bashrc
+ENV FREESURFER_HOME /usr/local/freesurfer
+ENV SUBJECTS_DIR /usr/local/freesurfer/subjects
+ENV MNI_DIR /usr/local/freesurfer/mni
+ENV FSF_OUTPUT_FORMAT nii.gz
+ENV FSFAST_HOME /usr/local/freesurfer/fsfast
+ENV FREESURFER_HOME FreeSurferEnv.sh
+RUN export FREESURFER_HOME SUBJECTS_DIR MNI_DIR FSF_OUTPUT_FORMAT FSFAST_HOME FREESURFER_HOME 
 
-ENV SHELL /bin/bash
+CMD ["/bin/bash"]

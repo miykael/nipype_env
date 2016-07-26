@@ -18,47 +18,49 @@ RUN ln -snf /bin/bash /bin/sh
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Update packages and install the minimal set of tools
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends wget curl git xvfb bzip2 unzip tcsh \
-                                               apt-utils \
-                                               build-essential \
-                                               gfortran \
-                                               graphviz \
-                                               liblapack-dev \
-                                               libblas-dev \
-                                               libatlas-dev \
-                                               libatlas-base-dev \
-                                               libblas3 \
-                                               libblas-common \
-                                               libopenblas-dev \
-                                               libxml2-dev \
-                                               libxslt1-dev \
-                                               libfreetype6-dev \
-                                               libpng12-dev \
-                                               libqhull-dev \
-                                               libxft-dev \
-                                               libjpeg-dev \
-                                               libyaml-dev \
-                                               ca-certificates
+RUN apt-get update -qq && \
+    apt-get install -y -qq wget \
+                           curl \
+                           git \
+                           xvfb \
+                           bzip2 \
+                           unzip \
+                           gfortran \
+                           apt-utils \
+                           fusefat \
+                           liblapack-dev \
+                           libblas-dev \
+                           libatlas-dev \
+                           libatlas-base-dev \
+                           libblas3 \
+                           libblas-common \
+                           libopenblas-dev \
+                           libxml2-dev \
+                           libxslt1-dev \
+                           libfreetype6-dev \
+                           libpng12-dev \
+                           libqhull-dev \
+                           libxft-dev \
+                           libjpeg-dev \
+                           libyaml-dev
 
 # Enable neurodebian
 RUN curl -sSL http://neuro.debian.net/lists/vivid.de-md.full | tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     curl -sSL http://neuro.debian.net/lists/vivid.us-tn.full >> /etc/apt/sources.list.d/neurodebian.sources.list && \
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
-    apt-get update
+    apt-get update -qq
 
 # Install miniconda
 RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
     /bin/bash Miniconda-latest-Linux-x86_64.sh -b -p /usr/local/miniconda && \
-    rm Miniconda-latest-Linux-x86_64.sh && \
-    echo '#!/bin/bash' > /etc/profile.d/conda_env.sh && \
-    echo 'export PATH=/usr/local/miniconda/bin:$PATH' >> /etc/profile.d/conda_env.sh && \
-    echo 'source /etc/profile.d/conda_env.sh' >> /etc/bash.bashrc
-
+    rm Miniconda-latest-Linux-x86_64.sh
 ENV PATH /usr/local/miniconda/bin:$PATH
+RUN export PATH
 
-# Install dependencies in conda
-RUN conda install --yes cython \
+# Update conda and install relevant dependencies
+RUN conda update conda --yes --quiet
+RUN conda update anaconda --yes --quiet
+RUN conda install --yes --quiet cython \
                         h5py \
                         ipython \
                         jupyter \
@@ -70,30 +72,28 @@ RUN conda install --yes cython \
                         scikit-image \
                         scikit-learn \
                         scipy \
-                        seaborn && \
-    python -c "from matplotlib import font_manager" && \
-    conda clean -a
+                        seaborn
+RUN python -c "from matplotlib import font_manager"
+RUN conda clean -ay
 
 # Install dependencies in pip
-RUN pip install --upgrade pip && \
-    pip install --upgrade dipy \
-                          nibabel \
-                          nipy \
-                          pydotplus \
-                          rdflib \
-                          xvfbwrapper \
+RUN pip install --upgrade --quiet pip && \
+    pip install --upgrade --quiet dipy \
+                                  graphviz \
+                                  nibabel \
+                                  nipy \
+                                  pydotplus \
+                                  rdflib \
+                                  xvfbwrapper \
                 --ignore-installed
 
-# Install graphviz and pygraphviz
-RUN apt-get install -y graphviz libgraphviz-dev && \
-    pip install --upgrade pygraphviz graphviz
-
 # Install nipype
-RUN pip install -e git+https://github.com/nipy/nipype#egg=nipype
+RUN conda config --add channels conda-forge
+RUN conda install -y nipype
 
 # Clear apt cache and other empty folders
 RUN apt-get clean remove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm -rf /boot /media /mnt /opt /srv
 
-ENV SHELL /bin/bash
+CMD ["/bin/bash"]

@@ -14,19 +14,20 @@ MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 USER root
 
 # Install FSL and AFNI
-RUN apt-get update && \
-    apt-get install -y fsl afni
+RUN apt-get update -qq && \
+    apt-get install -y -qq fsl afni
 
-# Set-up environment
-RUN echo '#!/bin/bash' > /etc/profile.d/neuro_env.sh && \
-    echo 'export FSLDIR=/usr/share/fsl' >> /etc/profile.d/neuro_env.sh && \
-    echo 'export PATH=$FSLDIR/5.0/bin:$PATH' >> /etc/profile.d/neuro_env.sh && \
-    echo 'source $FSLDIR/5.0/etc/fslconf/fsl.sh' >> /etc/profile.d/neuro_env.sh && \
-    echo 'export PATH=/usr/lib/afni/bin:$PATH' >> /etc/profile.d/neuro_env.sh && \
-    echo 'source /etc/profile.d/neuro_env.sh' >> /etc/bash.bashrc
+# Set-up FSL and AFNI environment
+ENV FSLDIR /usr/share/fsl/5.0
+ENV FSLOUTPUTTYPE NIFTI_GZ
+ENV FSLMULTIFILEQUIT TRUE
+ENV LD_LIBRARY_PATH /usr/lib/fsl/5.0
+ENV PATH /usr/lib/fsl/5.0:$PATH
+ENV PATH /usr/lib/afni/bin:$PATH
+RUN export PATH FSLDIR FSLMULTIFILEQUIT FSLOUTPUTTYPE LD_LIBRARY_PATH
 
 # Clear apt cache and other empty folders
 RUN apt-get clean remove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV SHELL /bin/bash
+CMD ["/bin/bash"]
