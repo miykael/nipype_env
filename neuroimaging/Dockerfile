@@ -2,7 +2,6 @@ FROM ubuntu:xenial
 
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
-
 #------------------------------------------------------------------------------
 # Basic Preparation and ENV variables
 #------------------------------------------------------------------------------
@@ -27,7 +26,6 @@ RUN apt-get update -qq && \
     apt-get install -y -qq bzip2 \
                            cmake \
                            curl \
-                           dcm2niix \
                            dicomnifti \
                            fusefat \
                            g++-4.9 \
@@ -197,70 +195,23 @@ RUN conda config --add channels conda-forge && \
 
 
 #------------------------------------------------------------------------------
-# Install VTK (http://www.vtk.org)
-#------------------------------------------------------------------------------
-USER root
-RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so /usr/lib/libgsl.so.0
-###   RUN apt-get -y build-dep vtk6 && \
-###       update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5   40 --slave /usr/bin/g++ g++ /usr/bin/g++-5 && \
-###       update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
-WORKDIR $SOFT
-ENV N_CPUS 4
-ENV VTK_VERSION v6.3.0
-ENV VTK_GIT https://gitlab.kitware.com/vtk/vtk.git
-RUN mkdir /soft/vtk
-RUN cd /soft/vtk
-RUN git clone $VTK_GIT -b $VTK_VERSION /soft/vtk/VTK
-RUN mkdir /soft/vtk/build
-RUN cd /soft/vtk/build
-RUN cmake -DCMAKE_BUILD_TYPE=Release \
-          -DPYTHON_EXECUTABLE=/usr/bin/python2.7 \
-          -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 \
-          -DPYTHON_INCLUDE_DIR=/usr/include/x86_64-linux-gnu/python2.7m \
-          -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7m.so.1 \
-          /soft/vtk/VTK
-RUN make -j $N_CPUS
-RUN make install
-
-
-#------------------------------------------------------------------------------
-# Install ANTs
-#------------------------------------------------------------------------------
-USER root
-ENV ANTS_VERSION v2.1.0
-ENV ANTS_GIT https://github.com/stnava/ANTs.git
-WORKDIR $SOFT
-RUN mkdir $SOFT/ants
-RUN cd $SOFT/ants
-RUN git clone $ANTS_GIT -b $ANTS_VERSION $SOFT/ants/ANTs
-RUN mkdir $SOFT/ants/build
-RUN cd $SOFT/ants/build
-RUN cmake -DCMAKE_BUILD_TYPE=Release \
-          -DUSE_VTK=ON \
-          -DUSE_SYSTEM_VTK=ON \
-          -DVTK_DIR=$SOFT/vtk/build \
-          $SOFT/ants/ANTs && \
-RUN make -j $N_CPUS
-RUN echo "export ANTSPATH=${SOFT}/ants/build/bin" >> $BASHRC
-RUN echo 'addpath $ANTSPATH' >> $BASHRC
-
-
-#------------------------------------------------------------------------------
 # Install MATLAB MCR
 #------------------------------------------------------------------------------
 USER root
 WORKDIR $SOFT
 ENV MATLAB_VERSION R2016b
-RUN mkdir /soft/mcr_install && \
-    mkdir /soft/mcr
-RUN wget -P /soft/mcr_install http://www.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/deployment_files/${MATLAB_VERSION}/installers/glnxa64/MCR_${MATLAB_VERSION}_glnxa64_installer.zip
-RUN unzip -q /soft/mcr_install/MCR_${MATLAB_VERSION}_glnxa64_installer.zip -d /soft/mcr_install && \
-    /soft/mcr_install/install -destinationFolder /soft/mcr -agreeToLicense yes -mode silent && \
-    rm -rf /soft/mcr_install
+RUN mkdir $SOFT/mcr_install && \
+    mkdir $SOFT/mcr
+RUN wget -P $SOFT/mcr_install http://www.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/deployment_files/${MATLAB_VERSION}/installers/glnxa64/MCR_${MATLAB_VERSION}_glnxa64_installer.zip
+RUN unzip -q $SOFT/mcr_install/MCR_${MATLAB_VERSION}_glnxa64_installer.zip -d $SOFT/mcr_install && \
+    $SOFT/mcr_install/install -destinationFolder $SOFT/mcr -agreeToLicense yes -mode silent && \
+    rm -rf $SOFT/mcr_install && \
+    rm /soft/mcr/v91/sys/os/glnxa64/libstdc++.so.6 && \
+    ln /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 /soft/mcr/v91/sys/os/glnxa64/libstdc++.so.6
 
 # Configure environment
 ENV MCR_VERSION v91
-ENV LD_LIBRARY_PATH /soft/mcr/${MCR_VERSION}/runtime/glnxa64:/soft/mcr/${MCR_VERSION}/bin/glnxa64:/soft/mcr/${MCR_VERSION}/sys/os/glnxa64:/soft/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH $SOFT/mcr/${MCR_VERSION}/runtime/glnxa64:$SOFT/mcr/${MCR_VERSION}/bin/glnxa64:$SOFT/mcr/${MCR_VERSION}/sys/os/glnxa64:$SOFT/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
 ENV MCR_INHIBIT_CTF_LOCK 1
 RUN export LD_LIBRARY_PATH
 
@@ -269,15 +220,16 @@ RUN export LD_LIBRARY_PATH
 # Install SPM Standalone
 #------------------------------------------------------------------------------
 USER root
+WORKDIR $SOFT
 ENV SPM_VERSION 12
 ENV SPM_REVISION r6906
-ENV SPM_DIR /soft/spm${SPM_VERSION}
+ENV SPM_DIR $SOFT/spm${SPM_VERSION}
 ENV SPM_EXEC ${SPM_DIR}/spm${SPM_VERSION}
-RUN wget -P /soft http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
-RUN unzip -q /soft/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /soft && \
-    rm -f /soft/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
+RUN wget -P $SOFT http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
+RUN unzip -q $SOFT/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d $SOFT && \
+    rm -f $SOFT/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
 RUN echo "export SPM_DIR=$SOFT/spm12" >> $BASHRC && \
-    echo "export SPMMCRCMD='$SPM_DIR/run_spm12.sh $MCR_DIR script'" >> $BASHRC && \
+    echo "export SPMMCRCMD='$SPM_DIR/run_spm12.sh $SOFT/mcr/v91/ script'" >> $BASHRC && \
     echo "export FORCE_SPMMCR=1" >> $BASHRC
 
 
@@ -285,9 +237,14 @@ RUN echo "export SPM_DIR=$SOFT/spm12" >> $BASHRC && \
 # Clear apt cache and other empty folders
 #------------------------------------------------------------------------------
 USER root
-RUN apt-get clean remove -y && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    rm -rf /boot /media /mnt /opt /srv
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get dist-upgrade -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y && \
+    apt-get remove -y && \
+    apt-get clean -y
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
 
 
 #------------------------------------------------------------------------------
