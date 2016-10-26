@@ -1,5 +1,4 @@
 FROM ubuntu:xenial
-
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
 #------------------------------------------------------------------------------
@@ -9,7 +8,7 @@ USER root
 RUN ln -snf /bin/bash /bin/sh
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV HOME /work
+ENV HOME /home
 ENV SOFT /soft
 ENV BASHRC $HOME/.bashrc
 ENV BASICUSER basicuser
@@ -244,7 +243,7 @@ RUN apt-get update -y && \
     apt-get autoclean -y && \
     apt-get remove -y && \
     apt-get clean -y
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv /opt
 
 
 #------------------------------------------------------------------------------
