@@ -17,7 +17,8 @@ MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 # Install FSL and ANFI
 #---------------------
 USER root
-RUN apt-get install -y -qq fsl afni
+RUN apt-get update && \
+    apt-get install -y -qq fsl afni
 ENV FSLDIR /usr/share/fsl/5.0
 ENV FSLOUTPUTTYPE NIFTI_GZ
 ENV FSLMULTIFILEQUIT TRUE
