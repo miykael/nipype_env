@@ -10,7 +10,7 @@
 # the above mentioned dockerfiles. For more information see:
 # https://github.com/miykael/nipype_env
 
-FROM miykael/nipype_expert
+FROM miykael/nipype_level2
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
 #-------------------
