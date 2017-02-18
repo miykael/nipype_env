@@ -82,13 +82,13 @@ RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.so
 # Update and install conda dependencies for python2.7 (including nipype)
 #-----------------------------------------------------------------------
 USER $NB_USER
-RUN conda create --yes -n python2 python=2.7 anaconda
+RUN conda create -yq -n python2 python=2.7 anaconda
 
 # Set Python2 as condas default environment
 ENV PATH /opt/conda/envs/python2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Make sure that necessary packages are installed
-RUN conda install -n python2 -qy beautifulsoup4 \
+RUN conda install -n python2 -yq beautifulsoup4 \
                                  bokeh \
                                  cloudpickle \
                                  cython \
