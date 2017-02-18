@@ -16,7 +16,7 @@ For a neuroimaging environment with Nipype, FSL, AFNI and FreeSurfer, use the do
 
 # Level3 - Neuroimaging environment with working FSL, AFNI, FreeSurfer & SPM12
 
-For aa neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer and SPM12, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
+For a neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer and SPM12, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
 
 # License
 
