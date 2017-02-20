@@ -1,6 +1,6 @@
 # Docker Nipype Environment
 
-This Docker image provides a basic Nipype environment, with possible AFNI, FSL, FreeSurfer and SPM12 dependencies. The corresponding github repo can be found here: [github.com/miykael/nipype_env](https://github.com/miykael/nipype_env).
+This Docker image provides a basic Nipype environment, with possible FSL, AFNI, FreeSurfer, ANTs and SPM12 dependencies. The corresponding github repo can be found here: [github.com/miykael/nipype_env](https://github.com/miykael/nipype_env).
 
 # Level0 - Python & Nipype
 
@@ -14,18 +14,16 @@ For a neuroimaging environment with Nipype, FSL and AFNI, use the docker image u
 
 For a neuroimaging environment with Nipype, FSL, AFNI and FreeSurfer, use the docker image under [miykael/nipype_level2](https://hub.docker.com/r/miykael/nipype_level2/).
 
-# Level3 - FSL, AFNI, FreeSurfer & SPM12
+# Level3 - FSL, AFNI, FreeSurfer & ANTs
 
-For a neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer and SPM12, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
+For a neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer and Ants, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
 
-# Level4 - FSL & SPM12
+# Level4 - FSL, AFNI, FreeSurfer, ANTs & SPM12
 
-For a neuroimaging environment with Nipype, FSL and SPM12, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
+For a neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer, ANTs and SPM12, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
 
 # License
 
-This Dockerfile is based on the dockerfiles 'crn_base' and 'crn_nipype' from the Poldrack Lab ([github.com/poldracklab/crn_base](https://github.com/poldracklab/crn_base)), the dockerfiles from neurovault ([github.com/NeuroVault/NeuroVault](https://github.com/NeuroVault/NeuroVault)), the dockerfile biss2016-notebook from Oscar Esteban from [hub.docker.com/u/oesteban](https://hub.docker.com/u/oesteban), the dockerfile under ([github.com/BIDS-Apps/dockerfile-templates](https://github.com/BIDS-Apps/dockerfile-templates)) and the dockerfile under ([github.com/Neurita/neuro_docker](https://github.com/Neurita/neuro_docker)).
-
-The jupyter notebook foundation is based on [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks)'s base-, minimal- and scipy-notebook.
+This Dockerfile is based on the dockerfile 'fmriprep' from the Poldrack Lab ([github.com/poldracklab/fmriprep](https://github.com/poldracklab/fmriprep)). The jupyter notebook foundation is based on [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks)'s base-notebook.
 
 This means that the same copyrights apply to this Dockerfile, as they do for the above mentioned dockerfiles. For more information see: [github.com/miykael/nipype_env](https://github.com/miykael/nipype_env).

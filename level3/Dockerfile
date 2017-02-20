@@ -1,10 +1,6 @@
-# This Dockerfile is based on the dockerfiles from 'crn_base' and 'crn_nipype'
-# from the Poldrack Lab (https://github.com/poldracklab/crn_base), the
-# dockerfiles from neurovault (https://github.com/NeuroVault/NeuroVault) and
-# the dockerfile biss2016-notebook from Oscar Esteban under
-# https://hub.docker.com/u/oesteban.
-# The jupyter notebook foundation is based on jupyter/docker-stacks's
-# base-, minimal- and scipy-notebook.
+# This Dockerfile is based on the dockerfile 'fmriprep' from the Poldrack
+# Lab (https://github.com/poldracklab/fmriprep). The jupyter notebook foundation
+# is based on jupyter/docker-stacks's base-notebook.
 #
 # This means that the same copyrights apply to this Dockerfile, as they do for
 # the above mentioned dockerfiles. For more information see:
@@ -13,49 +9,21 @@
 FROM miykael/nipype_level2
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
-#-------------------
-# Install MATLAB MCR
-#-------------------
+#---------------------
+# Install ANTs and C3D
+#---------------------
 USER root
-RUN mkdir -p /opt
-ENV MATLAB_VERSION R2016b
-RUN mkdir /opt/mcr_install && \
-    mkdir /opt/mcr
-RUN wget -q -P /opt/mcr_install http://www.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/deployment_files/${MATLAB_VERSION}/installers/glnxa64/MCR_${MATLAB_VERSION}_glnxa64_installer.zip
-RUN unzip -q /opt/mcr_install/MCR_${MATLAB_VERSION}_glnxa64_installer.zip -d /opt/mcr_install
-RUN /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
-RUN rm -rf /opt/mcr_install && \
-    rm /opt/mcr/v91/sys/os/glnxa64/libstdc++.so.6 && \
-    ln /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20 /opt/mcr/v91/sys/os/glnxa64/libstdc++.so.6
+RUN mkdir -p /opt/ants && \
+    curl -sSL "https://github.com/stnava/ANTs/releases/download/v2.1.0/Linux_Debian_jessie_x64.tar.bz2" \
+    | tar -xjC /opt/ants --strip-components 1
 
-# Configure environment
-ENV MCR_VERSION v91
-ENV LD_LIBRARY_PATH /opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
-ENV MCR_INHIBIT_CTF_LOCK 1
-RUN export LD_LIBRARY_PATH
-RUN export PATH=/opt/mcr/v91/bin:$PATH
-RUN export MATLABCMD=/opt/mcr/v91/bin/glnxa64/MATLABWindow
+ENV ANTSPATH /opt/ants && \
+    PATH $ANTSPATH:$PATH
 
-#--------------------------------------
-# Install SPM Standalone
-#--------------------------------------
-USER root
-ENV SPM_VERSION 12
-ENV SPM_REVISION r6906
-ENV SPM_DIR /opt/spm${SPM_VERSION}
-ENV SPM_EXEC ${SPM_DIR}/spm${SPM_VERSION}
-RUN wget -P /opt http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
-RUN unzip -q /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt && \
-    rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
-RUN ${SPM_EXEC} function exit
+# Installing and setting up c3d
+RUN mkdir -p /opt/c3d && \
+    curl -sSL "http://downloads.sourceforge.net/project/c3d/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz" \
+    | tar -xzC /opt/c3d --strip-components 1
 
-RUN export SPM_DIR=/opt/spm12
-RUN export SPMMCRCMD='$SPM_DIR/run_spm12.sh /opt/mcr/v91/ script'
-RUN export FORCE_SPMMCR=1
-
-#-----------------------------------------
-# Source to BASHRC and load configurations
-#-----------------------------------------
-USER root
-RUN ln -snf /bin/bash /bin/sh
-RUN ldconfig
+ENV C3DPATH /opt/c3d/ && \
+    PATH $C3DPATH/bin:$PATH
