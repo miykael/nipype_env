@@ -13,9 +13,9 @@
 FROM miykael/nipype_level0
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
-#---------------------
-# Install FSL and ANFI
-#---------------------
+#------------
+# Install FSL
+#------------
 USER root
 RUN apt-get update && \
     apt-get install -y -qq fsl
@@ -59,8 +59,8 @@ ENV MCR_VERSION v91
 ENV LD_LIBRARY_PATH /opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
 ENV MCR_INHIBIT_CTF_LOCK 1
 RUN export LD_LIBRARY_PATH
-RUN export PATH=/opt/mcr/v91/bin:$PATH
-RUN export MATLABCMD=/opt/mcr/v91/bin/glnxa64/MATLABWindow
+ENV PATH /opt/mcr/v91/bin:$PATH && \
+    MATLABCMD /opt/mcr/v91/bin/glnxa64/MATLABWindow
 
 #--------------------------------------
 # Install SPM Standalone
@@ -75,9 +75,9 @@ RUN unzip -q /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip 
     rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
 RUN ${SPM_EXEC} function exit
 
-RUN export SPM_DIR=/opt/spm12
-RUN export SPMMCRCMD='$SPM_DIR/run_spm12.sh /opt/mcr/v91/ script'
-RUN export FORCE_SPMMCR=1
+ENV SPM_DIR /opt/spm12 && \
+    SPMMCRCMD '/opt/spm12/run_spm12.sh /opt/mcr/v91/ script' && \
+    FORCE_SPMMCR 1
 
 #-----------------------------------------
 # Source to BASHRC and load configurations
