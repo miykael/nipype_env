@@ -67,7 +67,6 @@ RUN apt-get update && \
                         zip && \
     apt-get clean
 
-
 #--------------------
 # Install Neurodebian
 #--------------------
@@ -77,53 +76,27 @@ RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.so
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
     apt-get update -qq
 
-
 #-----------------------------------------------------------------------
 # Update and install conda dependencies for python2.7 (including nipype)
 #-----------------------------------------------------------------------
 USER $NB_USER
-RUN conda create -yq -n python2 python=2.7 anaconda
+
+# Make sure that necessary packages are installed
+RUN conda create -yq -n python2 python=2.7 ipython \
+                                           pip \
+                                           jupyter \
+                                           notebook \
+                                           nb_conda \
+                                           nb_conda_kernels \
+                                           matplotlib \
+                                           graphviz \
+                                           pandas \
+                                           seaborn \
+                                           nipype && \
+    conda clean -tipsy
 
 # Set Python2 as condas default environment
 ENV PATH /opt/conda/envs/python2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-# Make sure that necessary packages are installed
-RUN conda install -n python2 -yq beautifulsoup4 \
-                                 bokeh \
-                                 cloudpickle \
-                                 cython \
-                                 dill \
-                                 dipy \
-                                 graphviz \
-                                 h5py \
-                                 hdf5 \
-                                 ipython \
-                                 ipywidgets \
-                                 jupyter \
-                                 matplotlib \
-                                 networkx \
-                                 nibabel \
-                                 nipype \
-                                 nose \
-                                 numba \
-                                 numexpr \
-                                 numpy \
-                                 pandas \
-                                 patsy \
-                                 pip \
-                                 pydicom \
-                                 python-dateutil \
-                                 pyzmq \
-                                 scikit-image \
-                                 scikit-learn \
-                                 scipy \
-                                 seaborn \
-                                 setuptools \
-                                 sqlalchemy \
-                                 statsmodels \
-                                 vincent \
-                                 xlrd && \
-    conda clean -tipsy
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
@@ -142,7 +115,6 @@ RUN pip install kernda --no-cache && \
     kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
     pip uninstall kernda -y
 
-
 #------------------------------------
 # Update and install pip dependencies
 #------------------------------------
@@ -152,7 +124,6 @@ RUN pip install --upgrade --quiet pip && \
                                   rdflib \
                 --ignore-installed && \
     rm -rf ~/.cache/pip
-
 
 #----------------------------------------
 # Clear apt cache and other empty folders
