@@ -10,7 +10,7 @@ FROM miykael/nipype_level0
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
 #---------------------
-# Install FSL and ANFI
+# Install FSL and AFNI
 #---------------------
 USER root
 RUN apt-get update && \
