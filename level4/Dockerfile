@@ -13,10 +13,9 @@ MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 # Install MATLAB MCR
 #-------------------
 USER root
-RUN mkdir -p /opt
+RUN mkdir -p /opt/mcr_install /opt/mcr
+
 ENV MATLAB_VERSION R2016b
-RUN mkdir /opt/mcr_install && \
-    mkdir /opt/mcr
 RUN wget -q -P /opt/mcr_install http://www.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/deployment_files/${MATLAB_VERSION}/installers/glnxa64/MCR_${MATLAB_VERSION}_glnxa64_installer.zip
 RUN unzip -q /opt/mcr_install/MCR_${MATLAB_VERSION}_glnxa64_installer.zip -d /opt/mcr_install
 RUN /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
