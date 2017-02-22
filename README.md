@@ -22,6 +22,10 @@ For a neuroimaging environment with Nipype, FSL, AFNI, ANTs and SPM, use the doc
 
 For a neuroimaging environment with Nipype, FSL, AFNI, ANTs, SPM and FreeSurfer, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
 
+# Level5 - FSL, AFNI, ANTs & FreeSurfer
+
+For a neuroimaging environment with Nipype, FSL, AFNI, ANTs and FreeSurfer, use the docker image under [miykael/nipype_level5](https://hub.docker.com/r/miykael/nipype_level5/).
+
 # License
 
 This Dockerfile is based on the dockerfile 'fmriprep' from the Poldrack Lab ([github.com/poldracklab/fmriprep](https://github.com/poldracklab/fmriprep)). The jupyter notebook foundation is based on [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks)'s base-notebook.
