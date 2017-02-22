@@ -9,41 +9,21 @@
 FROM miykael/nipype_level1
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
-#---------------------------
-# Install FreeSurfer (v.6.0)
-#---------------------------
+#---------------------
+# Install ANTs and C3D
+#---------------------
 USER root
-RUN curl -sSL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar zxv -C /opt \
-    --exclude='freesurfer/trctrain' \
-    --exclude='freesurfer/subjects/fsaverage_sym' \
-    --exclude='freesurfer/subjects/fsaverage3' \
-    --exclude='freesurfer/subjects/fsaverage4' \
-    --exclude='freesurfer/subjects/fsaverage5' \
-    --exclude='freesurfer/subjects/fsaverage6' \
-    --exclude='freesurfer/subjects/cvs_avg35' \
-    --exclude='freesurfer/subjects/cvs_avg35_inMNI152' \
-    --exclude='freesurfer/subjects/bert' \
-    --exclude='freesurfer/subjects/V1_average' \
-    --exclude='freesurfer/average/mult-comp-cor' \
-    --exclude='freesurfer/lib/cuda' \
-    --exclude='freesurfer/lib/qt'
+RUN mkdir -p /opt/ants && \
+    curl -sSL "https://github.com/stnava/ANTs/releases/download/v2.1.0/Linux_Debian_jessie_x64.tar.bz2" \
+    | tar -xjC /opt/ants --strip-components 1
 
-ENV FSL_DIR=/usr/share/fsl/5.0 \
-    OS=Linux \
-    FS_OVERRIDE=0 \
-    FIX_VERTEX_AREA= \
-    FSF_OUTPUT_FORMAT=nii.gz \
-    FREESURFER_HOME=/opt/freesurfer
-ENV SUBJECTS_DIR=$FREESURFER_HOME/subjects \
-    FUNCTIONALS_DIR=$FREESURFER_HOME/sessions \
-    MNI_DIR=$FREESURFER_HOME/mni \
-    LOCAL_DIR=$FREESURFER_HOME/local \
-    FSFAST_HOME=$FREESURFER_HOME/fsfast \
-    MINC_BIN_DIR=$FREESURFER_HOME/mni/bin \
-    MINC_LIB_DIR=$FREESURFER_HOME/mni/lib \
-    MNI_DATAPATH=$FREESURFER_HOME/mni/data \
-    FMRI_ANALYSIS_DIR=$FREESURFER_HOME/fsfast
-ENV PERL5LIB=$MINC_LIB_DIR/perl5/5.8.5 \
-    MNI_PERL5LIB=$MINC_LIB_DIR/perl5/5.8.5 \
-    PATH=$FREESURFER_HOME/bin:$FSFAST_HOME/bin:$FREESURFER_HOME/tktools:$MINC_BIN_DIR:$PATH
-RUN echo "cHJpbnRmICJtaWNoYWVsbm90dGVyQGhvdG1haWwuY29tXG4xNDY4NVxuICpDNG9aVTJpclRmUGNcbiBGU1ByejhxQ0NXNWE2XG4iID4gL29wdC9mcmVlc3VyZmVyL2xpY2Vuc2UudHh0Cg==" | base64 -d | sh
+ENV ANTSPATH=/opt/ants \
+    PATH=$ANTSPATH:$PATH
+
+# Installing and setting up c3d
+RUN mkdir -p /opt/c3d && \
+    curl -sSL "http://downloads.sourceforge.net/project/c3d/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz" \
+    | tar -xzC /opt/c3d --strip-components 1
+
+ENV C3DPATH=/opt/c3d/ \
+    PATH=$C3DPATH/bin:$PATH

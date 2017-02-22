@@ -10,17 +10,17 @@ For a Nipype environment with dipy, matplotlib, nibabel, nipy, numpy, pandas, sc
 
 For a neuroimaging environment with Nipype, FSL and AFNI, use the docker image under [miykael/nipype_level1](https://hub.docker.com/r/miykael/nipype_level1/).
 
-# Level2 - FSL, AFNI & FreeSurfer
+# Level2 - FSL, AFNI & ANTs
 
-For a neuroimaging environment with Nipype, FSL, AFNI and FreeSurfer, use the docker image under [miykael/nipype_level2](https://hub.docker.com/r/miykael/nipype_level2/).
+For a neuroimaging environment with Nipype, FSL, AFNI and ANTs, use the docker image under [miykael/nipype_level2](https://hub.docker.com/r/miykael/nipype_level2/).
 
-# Level3 - FSL, AFNI, FreeSurfer & ANTs
+# Level3 - FSL, AFNI, ANTs & SPM
 
-For a neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer and Ants, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
+For a neuroimaging environment with Nipype, FSL, AFNI, ANTs and SPM, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
 
-# Level4 - FSL, AFNI, FreeSurfer, ANTs & SPM12
+# Level4 - FSL, AFNI, ANTs, SPM & FreeSurfer
 
-For a neuroimaging environment with Nipype, FSL, AFNI, FreeSurfer, ANTs and SPM12, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
+For a neuroimaging environment with Nipype, FSL, AFNI, ANTs, SPM and FreeSurfer, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
 
 # License
 
