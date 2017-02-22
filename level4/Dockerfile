@@ -14,7 +14,9 @@ MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 #-------------------
 USER root
 ENV MATLAB_VERSION R2016b
-RUN mkdir -p /opt/mcr_install /opt/mcr && \
+RUN mkdir -p /opt && \
+    mkdir /opt/mcr_install && \
+    mkdir /opt/mcr && \
     wget -q -P /opt/mcr_install http://www.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/deployment_files/${MATLAB_VERSION}/installers/glnxa64/MCR_${MATLAB_VERSION}_glnxa64_installer.zip && \
     unzip -q /opt/mcr_install/MCR_${MATLAB_VERSION}_glnxa64_installer.zip -d /opt/mcr_install && \
     /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent && \
@@ -24,32 +26,27 @@ RUN mkdir -p /opt/mcr_install /opt/mcr && \
 
 # Configure environment
 ENV MCR_VERSION=v91 \
+    MCR_INHIBIT_CTF_LOCK=1 \
     PATH=/opt/mcr/v91/bin:$PATH \
-    MATLABCMD=/opt/mcr/v91/bin/glnxa64/MATLABWindow \
-    MCR_INHIBIT_CTF_LOCK=1
-ENV LD_LIBRARY_PATH /opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
-RUN export LD_LIBRARY_PATH
+    MATLABCMD=/opt/mcr/v91/bin/glnxa64/MATLABWindow
+ENV LD_LIBRARY_PATH=/opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
 
 #--------------------------------------
 # Install SPM Standalone
 #--------------------------------------
 USER root
-ENV SPM_VERSION=12 \
-    SPM_REVISION=r6906
-ENV SPM_DIR /opt/spm${SPM_VERSION}
-ENV SPM_EXEC ${SPM_DIR}/spm${SPM_VERSION}
-RUN wget -P /opt http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip && \
-    unzip -q /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt && \
-    rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip
-RUN ${SPM_EXEC} function exit
+ENV SPM_REVISION=r6906
+ENV SPM_EXEC=/opt/spm12/spm12 \
+    SPMMCRCMD='/opt/spm12/run_spm12.sh /opt/mcr/v91/ script' \
+    FORCE_SPMMCR=1
+RUN wget -q -P /opt http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip && \
+    unzip -q /opt/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt && \
+    rm -f /opt/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip && \
+    ${SPM_EXEC} function exit
 
-ENV SPMMCRCMD '/opt/spm12/run_spm12.sh /opt/mcr/v91/ script'
-ENV FORCE_SPMMCR 1
-
-#-----------------------------
-# Final Preparation & clean up
-#-----------------------------
+#----------------------------------------
+# Clear apt cache and other empty folders
+#----------------------------------------
 USER root
-RUN ln -snf /bin/bash /bin/sh
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
-RUN ldconfig
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
