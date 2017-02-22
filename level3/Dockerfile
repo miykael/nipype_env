@@ -31,9 +31,9 @@ ENV MCR_VERSION=v91 \
     MATLABCMD=/opt/mcr/v91/bin/glnxa64/MATLABWindow
 ENV LD_LIBRARY_PATH=/opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
 
-#--------------------------------------
-# Install SPM Standalone
-#--------------------------------------
+#-------------------------
+# Install SPM12 Standalone
+#-------------------------
 USER root
 ENV SPM_REVISION=r6906
 ENV SPM_EXEC=/opt/spm12/spm12 \

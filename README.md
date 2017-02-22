@@ -14,13 +14,13 @@ For a neuroimaging environment with Nipype, FSL and AFNI, use the docker image u
 
 For a neuroimaging environment with Nipype, FSL, AFNI and ANTs, use the docker image under [miykael/nipype_level2](https://hub.docker.com/r/miykael/nipype_level2/).
 
-# Level3 - FSL, AFNI, ANTs & SPM
+# Level3 - FSL, AFNI, ANTs & SPM12
 
-For a neuroimaging environment with Nipype, FSL, AFNI, ANTs and SPM, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
+For a neuroimaging environment with Nipype, FSL, AFNI, ANTs and SPM12, use the docker image under [miykael/nipype_level3](https://hub.docker.com/r/miykael/nipype_level3/).
 
-# Level4 - FSL, AFNI, ANTs, SPM & FreeSurfer
+# Level4 - FSL, AFNI, ANTs, SPM12 & FreeSurfer
 
-For a neuroimaging environment with Nipype, FSL, AFNI, ANTs, SPM and FreeSurfer, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
+For a neuroimaging environment with Nipype, FSL, AFNI, ANTs, SPM12 and FreeSurfer, use the docker image under [miykael/nipype_level4](https://hub.docker.com/r/miykael/nipype_level4/).
 
 # Level5 - FSL, AFNI, ANTs & FreeSurfer
 
