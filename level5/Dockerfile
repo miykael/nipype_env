@@ -13,7 +13,9 @@ MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 # Install FreeSurfer (v.6.0)
 #---------------------------
 USER root
-RUN curl -sSL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar zxv -C /opt \
+RUN wget -q ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
+RUN tar zxv freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz \
+    -C /usr/local \
     --exclude='freesurfer/trctrain' \
     --exclude='freesurfer/subjects/fsaverage_sym' \
     --exclude='freesurfer/subjects/fsaverage3' \
@@ -27,6 +29,7 @@ RUN curl -sSL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/frees
     --exclude='freesurfer/average/mult-comp-cor' \
     --exclude='freesurfer/lib/cuda' \
     --exclude='freesurfer/lib/qt'
+RUN rm freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
 
 ENV FSL_DIR=/usr/share/fsl/5.0 \
     OS=Linux \
