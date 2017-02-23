@@ -14,8 +14,8 @@ MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 #---------------------------
 USER root
 RUN wget -q ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
-RUN tar zxv freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz \
-    -C /usr/local \
+RUN tar -xvzf freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz \
+    -C /opt \
     --exclude='freesurfer/trctrain' \
     --exclude='freesurfer/subjects/fsaverage_sym' \
     --exclude='freesurfer/subjects/fsaverage3' \
