@@ -9,21 +9,44 @@
 FROM miykael/nipype_level1
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
-#---------------------
-# Install ANTs and C3D
-#---------------------
+#-------------------
+# Install MATLAB MCR
+#-------------------
 USER root
-RUN mkdir -p /opt/ants && \
-    curl -sSL "https://github.com/stnava/ANTs/releases/download/v2.1.0/Linux_Debian_jessie_x64.tar.bz2" \
-    | tar -xjC /opt/ants --strip-components 1
+ENV MATLAB_VERSION R2016b
+RUN mkdir -p /opt && \
+    mkdir /opt/mcr_install && \
+    mkdir /opt/mcr && \
+    wget -q -P /opt/mcr_install http://www.mathworks.com/supportfiles/downloads/${MATLAB_VERSION}/deployment_files/${MATLAB_VERSION}/installers/glnxa64/MCR_${MATLAB_VERSION}_glnxa64_installer.zip && \
+    unzip -q /opt/mcr_install/MCR_${MATLAB_VERSION}_glnxa64_installer.zip -d /opt/mcr_install && \
+    /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent && \
+    rm -rf /opt/mcr_install && \
+    rm /opt/mcr/v91/sys/os/glnxa64/libstdc++.so.6 && \
+    ln /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20 /opt/mcr/v91/sys/os/glnxa64/libstdc++.so.6
 
-ENV ANTSPATH=/opt/ants \
-    PATH=$ANTSPATH:$PATH
+# Configure environment
+ENV MCR_VERSION=v91 \
+    MCR_INHIBIT_CTF_LOCK=1 \
+    PATH=/opt/mcr/v91/bin:$PATH \
+    MATLABCMD=/opt/mcr/v91/bin/glnxa64/MATLABWindow
+ENV LD_LIBRARY_PATH=/opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSION}/bin/glnxa64:/opt/mcr/${MCR_VERSION}/sys/os/glnxa64:/opt/mcr/${MCR_VERSION}/sys/opengl/lib/glnxa64:$LD_LIBRARY_PATH
 
-# Installing and setting up c3d
-RUN mkdir -p /opt/c3d && \
-    curl -sSL "http://downloads.sourceforge.net/project/c3d/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz" \
-    | tar -xzC /opt/c3d --strip-components 1
+#-------------------------
+# Install SPM12 Standalone
+#-------------------------
+USER root
+ENV SPM_REVISION=r6906
+ENV SPM_EXEC=/opt/spm12/spm12 \
+    SPMMCRCMD='/opt/spm12/run_spm12.sh /opt/mcr/v91/ script' \
+    FORCE_SPMMCR=1
+RUN wget -q -P /opt http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip && \
+    unzip -q /opt/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip -d /opt && \
+    rm -f /opt/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip && \
+    ${SPM_EXEC} function exit
 
-ENV C3DPATH=/opt/c3d/ \
-    PATH=$C3DPATH/bin:$PATH
+#----------------------------------------
+# Clear apt cache and other empty folders
+#----------------------------------------
+USER root
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
