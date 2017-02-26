@@ -40,6 +40,7 @@ RUN conda create -yq -n python2 python=2.7 ipython \
                                            notebook \
                                            nb_conda \
                                            nb_conda_kernels \
+                                           nilearn \
                                            matplotlib \
                                            graphviz \
                                            pandas \
