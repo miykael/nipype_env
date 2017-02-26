@@ -44,6 +44,9 @@ RUN wget -q -P /opt http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/sp
     rm -f /opt/spm12_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip && \
     ${SPM_EXEC} function exit
 
+# Make the spm12_run.sh script executable for NB_USER
+chown -R $NB_USER:users /opt/spm12
+
 #----------------------------------------
 # Clear apt cache and other empty folders
 #----------------------------------------
