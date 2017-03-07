@@ -88,8 +88,18 @@ RUN pip install --upgrade --quiet pip && \
 # Install newest version of Nipype (github)
 #------------------------------------------
 USER root
-RUN apt-get install -y gcc
-RUN pip install -e git+https://github.com/nipy/nipype#egg=nipype
+RUN conda install -yq -n python2 click \
+                                 funcsigs \
+                                 lxml \
+                                 nose \
+                                 prov \
+                                 psutil \
+                                 pydotplus \
+                                 pytest \
+                                 simplejson \
+                                 traits \
+                                 xvfbwrapper
+RUN easy_install --upgrade nipype
 
 #----------------------------------------
 # Clear apt cache and other empty folders
