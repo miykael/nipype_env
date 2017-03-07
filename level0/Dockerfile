@@ -28,24 +28,27 @@ RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.so
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
     apt-get update -qq
 
-#-----------------------------------------------------------------------
-# Update and install conda dependencies for python2.7 (including nipype)
-#-----------------------------------------------------------------------
+#----------------------------------------------------
+# Update and install conda dependencies for python2.7
+#----------------------------------------------------
 USER $NB_USER
 
 # Make sure that necessary packages are installed
 RUN conda create -yq -n python2 python=2.7 ipython \
-                                           pip \
+                                           cython \
+                                           dipy \
+                                           graphviz \
+                                           joblib \
                                            jupyter \
-                                           notebook \
+                                           matplotlib \
                                            nb_conda \
                                            nb_conda_kernels \
                                            nilearn \
-                                           matplotlib \
-                                           graphviz \
+                                           notebook \
                                            pandas \
-                                           seaborn \
-                                           nipype && \
+                                           pip \
+                                           scikit-image \
+                                           seaborn && \
     conda clean -tipsy
 
 # Make sure that Python2 is loaded before Python3
@@ -77,8 +80,16 @@ USER $NB_USER
 RUN pip install --upgrade --quiet pip && \
     pip install --upgrade --quiet nipy \
                                   rdflib \
+                                  pprocess \
                 --ignore-installed && \
     rm -rf ~/.cache/pip
+
+#------------------------------------------
+# Install newest version of Nipype (github)
+#------------------------------------------
+USER root
+RUN apt-get install -y gcc
+RUN pip install -e git+https://github.com/nipy/nipype#egg=nipype
 
 #----------------------------------------
 # Clear apt cache and other empty folders
