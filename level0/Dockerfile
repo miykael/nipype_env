@@ -87,19 +87,13 @@ RUN pip install --upgrade --quiet pip && \
 #------------------------------------------
 # Install newest version of Nipype (github)
 #------------------------------------------
-USER root
-RUN conda install -yq -n python2 click \
-                                 funcsigs \
-                                 lxml \
-                                 nose \
-                                 prov \
-                                 psutil \
-                                 pydotplus \
-                                 pytest \
-                                 simplejson \
-                                 traits \
-                                 xvfbwrapper
-RUN easy_install --upgrade nipype
+USER $NB_USER
+# Install Nipype dependencies
+RUN conda install -yq -n python2 nipype
+
+# Remove Nipype and install newest version from github
+RUN conda remove -yq -n python2 nipype && \
+    easy_install --upgrade nipype
 
 #----------------------------------------
 # Clear apt cache and other empty folders
