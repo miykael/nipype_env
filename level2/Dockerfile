@@ -46,6 +46,7 @@ RUN wget -q -P /opt http://www.fil.ion.ucl.ac.uk/spm/download/restricted/bids/sp
 
 # Make the spm12_run.sh script executable for NB_USER
 RUN chown -R $NB_USER:users /opt/spm12
+RUN chown -R $NB_USER:users /home/$NB_USER/*
 
 #----------------------------------------
 # Clear apt cache and other empty folders
