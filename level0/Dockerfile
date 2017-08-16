@@ -21,8 +21,10 @@ RUN apt-get update && \
                                                 tree \
                                                 unzip \
                                                 wget \
+                                                vim \
                                                 xvfb \
                                                 zip
+
 ENV NEURODEBIAN_URL http://neuro.debian.net/lists/jessie.de-md.full
 RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
