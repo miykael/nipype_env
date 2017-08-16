@@ -30,6 +30,12 @@ RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.so
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
     apt-get update -qq
 
+# Install datalad dcm2niix and git-annex
+RUN apt-get update && \
+    apt-get install -yq --no-install-recommends datalad \
+                                                dcm2niix \
+                                                git-annex-standalone
+
 #---------------------------------------------------
 # Update and install conda dependencies for python 3
 #---------------------------------------------------
@@ -78,9 +84,12 @@ USER root
 RUN apt-get install -yq --no-install-recommends graphviz
 USER $NB_USER
 RUN pip install --upgrade --quiet pip && \
-    pip install --upgrade --quiet nipy \
+    pip install --upgrade --quiet duecredit \
+                                  nipy \
+                                  niworkflows \
                                   rdflib \
                                   pprocess \
+                                  pybids \
                 --ignore-installed && \
     rm -rf ~/.cache/pip
 
