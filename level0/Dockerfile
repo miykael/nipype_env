@@ -89,11 +89,11 @@ RUN pip install --upgrade --quiet pip && \
 #------------------------------------------
 USER $NB_USER
 # Install Nipype dependencies
-RUN conda install -yq -n python2 nipype
+RUN conda install -yq nipype
 
 # Remove Nipype and install newest version from github
-RUN conda remove -yq -n python2 nipype && \
-    easy_install --upgrade nipype
+RUN conda remove -yq nipype && \
+    pip install -e git+https://github.com/nipy/nipype#egg=nipype
 
 #---------------------------
 # Install MRIQC and fMRIprep
