@@ -30,48 +30,46 @@ RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.so
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
     apt-get update -qq
 
-#----------------------------------------------------
-# Update and install conda dependencies for python2.7
-#----------------------------------------------------
+#---------------------------------------------------
+# Update and install conda dependencies for python 3
+#---------------------------------------------------
 USER $NB_USER
 
 # Make sure that necessary packages are installed
-RUN conda create -yq -n python2 python=2.7 ipython \
-                                           cython \
-                                           dipy \
-                                           graphviz \
-                                           joblib \
-                                           jupyter \
-                                           matplotlib \
-                                           nb_conda \
-                                           nb_conda_kernels \
-                                           nilearn \
-                                           notebook \
-                                           pandas \
-                                           pip \
-                                           scikit-image \
-                                           seaborn && \
+RUN conda install -yq ipython \
+                      codecov \
+                      cython \
+                      dipy \
+                      graphviz \
+                      joblib \
+                      jupyter \
+                      matplotlib \
+                      nb_conda \
+                      nb_conda_kernels \
+                      nilearn \
+                      nitime \
+                      notebook \
+                      pandas \
+                      pip \
+                      scikit-image \
+                      seaborn && \
     conda clean -tipsy
-
-# Make sure that Python2 is loaded before Python3
-ENV PATH=/opt/conda/envs/python2/bin:$PATH
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-RUN MPLBACKEND=Agg $CONDA_DIR/envs/python2/bin/python -c "import matplotlib.pyplot"
+RUN MPLBACKEND=Agg $CONDA_DIR/bin/python -c "import matplotlib.pyplot"
 
 # Activate ipywidgets extension in the environment that runs the notebook server
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
 
-# Install Python 2 kernel spec globally to avoid permission problems when NB_UID
+# Install Python 3 kernel spec globally to avoid permission problems when NB_UID
 # switching at runtime and to allow the notebook server running out of the root
-# environment to find it. Also, activate the python2 environment upon kernel
+# environment to find it. Also, activate the python3 environment upon kernel
 # launch.
 USER root
 RUN pip install kernda --no-cache && \
-    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
-    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
-    pip uninstall kernda -y
+    $CONDA_DIR/bin/python -m ipykernel install && \
+    kernda -o -y /usr/local/share/jupyter/kernels/python3/kernel.json
 
 #---------------------------------------------
 # Install graphviz and update pip dependencies
