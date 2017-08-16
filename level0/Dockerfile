@@ -97,6 +97,15 @@ RUN conda install -yq -n python2 nipype
 RUN conda remove -yq -n python2 nipype && \
     easy_install --upgrade nipype
 
+#---------------------------
+# Install MRIQC and fMRIprep
+#---------------------------
+USER root
+RUN apt-get install -y --no-install-recommends gcc++ && \
+    pip install git+https://github.com/poldracklab/mriqc.git && \
+    pip install git+https://github.com/poldracklab/fmriprep.git && \
+    apt-get purge -y --auto-remove gcc++
+
 #----------------------------------------
 # Clear apt cache and other empty folders
 #----------------------------------------
