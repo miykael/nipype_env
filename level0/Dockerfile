@@ -87,7 +87,6 @@ USER $NB_USER
 RUN pip install --upgrade --quiet pip && \
     pip install --upgrade --quiet duecredit \
                                   nipy \
-                                  niworkflows \
                                   rdflib \
                                   pprocess \
                                   pybids \
@@ -108,10 +107,10 @@ RUN conda remove -yq nipype && \
 # Install MRIQC and fMRIprep
 #---------------------------
 USER root
-RUN apt-get install -y --no-install-recommends gcc++ && \
+RUN apt-get install -y gcc && \
     pip install git+https://github.com/poldracklab/mriqc.git && \
     pip install git+https://github.com/poldracklab/fmriprep.git && \
-    apt-get purge -y --auto-remove gcc++
+    apt-get purge -y --auto-remove gcc
 
 #----------------------------------------
 # Clear apt cache and other empty folders
