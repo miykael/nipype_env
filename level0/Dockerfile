@@ -25,7 +25,7 @@ RUN apt-get update && \
                                                 xvfb \
                                                 zip
 
-ENV NEURODEBIAN_URL http://neuro.debian.net/lists/jessie.de-md.full
+ENV NEURODEBIAN_URL http://neuro.debian.net/lists/xenial.de-md.full
 RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
     apt-get update -qq
@@ -109,7 +109,8 @@ RUN conda remove -yq nipype && \
 USER root
 RUN apt-get install -y gcc && \
     pip install git+https://github.com/poldracklab/mriqc.git && \
-    pip install git+https://github.com/poldracklab/fmriprep.git
+    pip install git+https://github.com/poldracklab/fmriprep.git && \
+    apt-get purge -y --auto-remove gcc
 
 #----------------------------------------
 # Clear apt cache and other empty folders
