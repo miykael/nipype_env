@@ -9,12 +9,12 @@
 FROM miykael/nipype_level0
 MAINTAINER Michael Notter <michaelnotter@hotmail.com>
 
-#---------------------
-# Install FSL and AFNI
-#---------------------
+#------------
+# Install FSL
+#------------
 USER root
 RUN apt-get update && \
-    apt-get install -y -qq --no-install-recommends fsl-core fsl-atlases afni
+    apt-get install -y -qq --no-install-recommends fsl-core fsl-atlases
 ENV FSLDIR=/usr/share/fsl/5.0 \
     FSLOUTPUTTYPE=NIFTI_GZ \
     FSLMULTIFILEQUIT=TRUE \
@@ -22,11 +22,26 @@ ENV FSLDIR=/usr/share/fsl/5.0 \
     LD_LIBRARY_PATH=/usr/lib/fsl/5.0:$LD_LIBRARY_PATH \
     FSLTCLSH=/usr/bin/tclsh \
     FSLWISH=/usr/bin/wish \
-    AFNI_MODELPATH=/usr/lib/afni/models \
+    PATH=/usr/lib/fsl/5.0:$PATH
+
+#-------------
+# Install AFNI
+#-------------
+USER root
+RUN apt-get update && \
+    apt-get install -y -qq --no-install-recommends afni
+ENV AFNI_MODELPATH=/usr/lib/afni/models \
     AFNI_IMSAVE_WARNINGS=NO \
     AFNI_TTATLAS_DATASET=/usr/share/afni/atlases \
     AFNI_PLUGINPATH=/usr/lib/afni/plugins \
-    PATH=/usr/lib/fsl/5.0:/usr/lib/afni/bin:$PATH
+    PATH=/usr/lib/afni/bin:$PATH
+
+#----------
+# Install R
+#----------
+USER root
+RUN apt-get update && \
+    apt-get install -y -qq --no-install-recommends r-base
 
 #----------------------------------------
 # Clear apt cache and other empty folders
