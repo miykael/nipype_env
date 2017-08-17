@@ -36,13 +36,14 @@ RUN apt-get update && \
                                                 dcm2niix \
                                                 git-annex-standalone
 
-#---------------------------------------------------
-# Update and install conda dependencies for python 3
-#---------------------------------------------------
+#-----------------------------------------------------
+# Update and install conda dependencies for python 3.5
+#-----------------------------------------------------
 USER $NB_USER
 
 # Make sure that necessary packages are installed
-RUN conda install -yq ipython \
+RUN conda install -yq python=3.5 \
+                      ipython \
                       codecov \
                       cython \
                       dipy \
@@ -90,8 +91,7 @@ RUN pip install --upgrade --quiet pip && \
                                   rdflib \
                                   pprocess \
                                   pybids \
-                --ignore-installed && \
-    rm -rf ~/.cache/pip
+                --ignore-installed
 
 #------------------------------------------
 # Install newest version of Nipype (github)
@@ -118,4 +118,5 @@ RUN apt-get install -y --no-install-recommends gcc++ && \
 #----------------------------------------
 USER root
 RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv && \
+    rm -rf ~/.cache/pip
