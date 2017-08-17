@@ -23,7 +23,7 @@ RUN mkdir -p /opt && \
     /opt/mcr_install/install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent && \
     rm -rf /opt/mcr_install && \
     rm /opt/mcr/${MCR_VERSION}/sys/os/glnxa64/libstdc++.so.6 && \
-    ln /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.20 /opt/mcr/${MCR_VERSION}/sys/os/glnxa64/libstdc++.so.6
+    ln /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 /opt/mcr/${MCR_VERSION}/sys/os/glnxa64/libstdc++.so.6
 
 # Configure environment
 ENV MCR_INHIBIT_CTF_LOCK=1 \
@@ -35,7 +35,7 @@ ENV LD_LIBRARY_PATH=/opt/mcr/${MCR_VERSION}/runtime/glnxa64:/opt/mcr/${MCR_VERSI
 # Install SPM12 Standalone
 #-------------------------
 USER root
-ENV SPM_REVISION=latest
+ENV SPM_REVISION=r7103
 ENV SPM_EXEC=/opt/spm12/spm12 \
     SPMMCRCMD='/opt/spm12/run_spm12.sh /opt/mcr/${MCR_VERSION}/ script' \
     FORCE_SPMMCR=1
