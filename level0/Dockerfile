@@ -109,8 +109,7 @@ RUN conda remove -yq nipype && \
 USER root
 RUN apt-get install -y gcc && \
     pip install git+https://github.com/poldracklab/mriqc.git && \
-    pip install git+https://github.com/poldracklab/fmriprep.git && \
-    apt-get purge -y --auto-remove gcc
+    pip install git+https://github.com/poldracklab/fmriprep.git
 
 #----------------------------------------
 # Clear apt cache and other empty folders
