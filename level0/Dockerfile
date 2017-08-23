@@ -101,7 +101,7 @@ RUN conda install -yq nipype
 
 # Remove Nipype and install newest version from github
 RUN conda remove -yq nipype && \
-    pip install -e git+https://github.com/nipy/nipype#egg=nipype
+    pip install git+https://github.com/nipy/nipype#egg=nipype
 
 #---------------------------
 # Install MRIQC and fMRIprep
